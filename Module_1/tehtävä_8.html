@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>prints all leap years</title>
+</head>
+<body>
+
+    <script>
+        let startyear = Number(prompt("Enter the starting year: "));
+        let endtyear = Number(prompt("Enter the endting year: "));
+        document.write("Leap years between " + startyear + " and " + endtyear + " are : <br>")
+        document.write("<ul>");
+            for (let year = startyear; year <= endtyear; year++){
+                if ((year % 4 === 0 && year % 100 !== 0 ) || (year % 400 === 0)){
+                    document.write("<li>"+ year + "</li>");
+                }
+            }
+
+    </script>
+    
+</body>
+</html>

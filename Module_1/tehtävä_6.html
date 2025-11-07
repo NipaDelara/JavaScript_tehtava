@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculate the square root</title>
+</head>
+<body>
+    <script>
+        let clculate = confirm("Should I calculate the square root? " )
+        let number = prompt("Enter a number:");
+         if (number < 0 ){
+                document.write("The square root of a negative number is not defined.");
+    } else if (clculate){
+                let result = Math.sqrt(number).toFixed(2); 
+                document.write(" The square root of " + number + " is " + result);
+    } else {
+        document.write("Square root calculation cancled")
+    }
+
+    </script>
+</body>
+</html>
