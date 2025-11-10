@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>function</title>
+</head>
+<body>
+<script>
+//candidates
+const numCandidates = Number(prompt("Enter the number of candidates:"));
+
+//Create an array
+const candidates = [];
+
+for (let i = 0; i < numCandidates; i++) {
+  const name = prompt(`Name for candidate ${i + 1}:`);
+  candidates.push({ name: name, votes: 0 });
+}
+
+//number of voters
+const numVoters = Number(prompt("Enter the number of voters:"));
+
+//Collect votes
+for (let i = 0; i < numVoters; i++) {
+  const vote = prompt(`Voter ${i + 1}, enter the candidate name you vote for:`);
+
+
+  if (vote === "") {
+    console.log(`Voter ${i + 1} gave an empty vote.`);
+    continue;
+  }
+
+  // Find candidate and add a vote
+  const candidate = candidates.find(c => c.name.toLowerCase() === vote.toLowerCase());
+  if (candidate) {
+    candidate.votes += 1;
+  } else {
+    console.log(`"${vote}" is not a valid candidate name. Vote ignored.`);
+  }
+}
+
+//Sort candidates
+candidates.sort((a, b) => b.votes - a.votes);
+
+//winner
+const winner = candidates[0];
+console.log(`The winner is ${winner.name} with ${winner.votes} votes.`);
+
+//full results
+console.log("Results:");
+for (const c of candidates) {
+  console.log(`${c.name}: ${c.votes} votes`);
+}
+
+
+</script>
+
+</body>
+</html>

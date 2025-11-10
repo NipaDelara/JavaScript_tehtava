@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>function</title>
+</head>
+<body>
+<script>
+function even(numbers) {
+  let evens = [];
+  for (let i = 0; i < numbers.length; i++) {
+    if (numbers[i] % 2 === 0) {
+      evens.push(numbers[i]);
+    }
+  }
+  return evens;
+}
+
+const originalArray = [2, 7, 4, 9, 6, 10];
+
+const evenNumbers = even(originalArray);
+
+console.log("Original array:", originalArray);
+console.log("Even numbers array:", evenNumbers);
+
+</script>
+</body>
+</html>

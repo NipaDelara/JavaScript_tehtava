@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Array</title>
+
+</head>
+<body>
+  <script>
+         // Step 1: Ask the user for the number of participants
+    const count = Number(prompt("Enter the number of participants:"));
+
+    const participants = [];
+
+    for (let i = 0; i < count; i++) {
+      const name = prompt(`Enter the name of participant ${i + 1}:`);
+      participants.push(name);
+    }
+
+    participants.sort();
+
+    document.write("<h3>List of Participants:</h3>");
+    document.write("<ol>");
+    for (let i = 0; i < participants.length; i++) {
+      document.write(`<li>${participants[i]}</li>`);
+    }
+    document.write("</ol>");
+
+  </script>
+</body>
+</html>

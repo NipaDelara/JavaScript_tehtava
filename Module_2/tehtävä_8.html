@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Concatenated</title>
+</head>
+<body>
+<script>
+      function concat(arr) {
+        let result = "";
+        for (const item of arr) {
+          result += String(item);
+        }
+        return result;
+      }
+      const names = ["Johnny", "DeeDee", "Joey", "Marky"];
+
+      const result = concat(names);
+      document.write("<h3>Concatenated:</h3>");
+      document.write(`<p>${result}</p>`);
+</script>
+</body>
+</html>
