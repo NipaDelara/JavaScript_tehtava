@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Task_6</title>
+</head>
+<body>
+
+<section>
+    <h2>Search Jokes</h2>
+    <form id="searchForm">
+      <label for="query">Search term:</label>
+      <input id="query" type="text" placeholder="e.g. karate, code, car" required>
+      <button type="submit">Search</button>
+    </form>
+
+    <div id="results"></div>
+</section>
+
+<script>
+  const searchForm = document.getElementById("searchForm");
+  const queryInput = document.getElementById("query");
+  const resultsDiv = document.getElementById("results");
+
+  // Search jokes
+  searchForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const term = queryInput.value.trim();
+    if (!term) return;
+
+    const url = `https://api.chucknorris.io/jokes/search?query=${encodeURIComponent(term)}`;
+
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+
+        resultsDiv.innerHTML = "";
+
+        const jokes = data.result;
+
+        if (jokes.length === 0) {
+          resultsDiv.textContent = "No jokes found.";
+          return;
+        }
+
+        jokes.forEach(jokeObj => {
+          const article = document.createElement("article");
+          const p = document.createElement("p");
+          p.textContent = jokeObj.value;
+          article.appendChild(p);
+          resultsDiv.appendChild(article);
+        });
+      })
+      .catch(error => {
+        console.error("Error searching jokes:", error);
+        resultsDiv.textContent = "Something went wrong. Check console.";
+      });
+  });
+</script>
+
+</body>
+</html>

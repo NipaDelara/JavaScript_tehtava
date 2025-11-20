@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Task_3_TVMaze</title>
+</head>
+<body>
+
+  <h1>TVMaze Search</h1>
+
+  <form id="searchForm">
+    <label for="query">TV series name:</label>
+    <input id="query" type="text" placeholder="Enter TV series name" required>
+    <button type="submit">Search</button>
+  </form>
+
+  <p>Results on this page:</p>
+
+  <div id="results"></div>
+
+  <script>
+    const form = document.getElementById("searchForm");
+    const input = document.getElementById("query");
+    const resultsDiv = document.getElementById("results");
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const value = input.value.trim();
+      if (!value) {
+        console.log("Please enter a TV series name.");
+        return;
+      }
+
+      const url = `https://api.tvmaze.com/search/shows?q=${encodeURIComponent(value)}`;
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          resultsDiv.innerHTML = "";
+
+            if (data.length === 0) {
+            resultsDiv.textContent = "No results found.";
+            return;
+          }
+
+          // Loop
+
+          data.forEach(tvShow => {
+            const show = tvShow.show;
+
+            // Create article
+            const article = document.createElement("article");
+
+            // Name
+            const title = document.createElement("h2");
+            title.textContent = show.name;
+            article.appendChild(title);
+
+            // URL in <a>
+            if (show.url) {
+              const link = document.createElement("a");
+              link.href = show.url;
+              link.target = "_blank";
+              link.textContent = "Show details";
+              article.appendChild(link);
+            }
+
+            // image
+            const img = document.createElement("img");
+            img.src = show.image?.medium;
+            img.alt = show.name;
+            article.appendChild(img);
+
+            const summaryDiv = document.createElement("div");
+            summaryDiv.innerHTML = show. Summary || "<p>No summary available.</p>";
+            article.appendChild(summaryDiv);
+
+            resultsDiv.appendChild(article);
+          });
+        })
+        .catch(error => {
+        console.error("Fetch error:", error);
+        resultsDiv.innerHTML = "Something went wrong. Check console for details.";
+        });
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Task_4_TVMaze</title>
+</head>
+<body>
+
+    <h1>TVMaze Search</h1>
+
+  <form id="searchForm">
+    <label for="query">TV series name:</label>
+    <input id="query" type="text" placeholder="Enter TV series name" required>
+    <button type="submit">Search</button>
+  </form>
+
+  <p>Results on this page:</p>
+
+  <div id="results"></div>
+
+  <script>
+    const form = document.getElementById("searchForm");
+    const input = document.getElementById("query");
+    const resultsDiv = document.getElementById("results");
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const value = input.value.trim();
+      if (!value) {
+        console.log("Please enter a TV series name.");
+        return;
+      }
+
+      const url = `https://api.tvmaze.com/search/shows?q=${encodeURIComponent(value)}`;
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          console.log("Search results:", data);
+
+          resultsDiv.innerHTML = "";
+
+          if (data.length === 0) {
+            resultsDiv.textContent = "No results found.";
+            return;
+          }
+
+          data.forEach(tvShow => {
+            const show = tvShow.show;
+
+            const article = document.createElement("article");
+
+
+            const title = document.createElement("h2");
+            title.textContent = show.name;
+            article.appendChild(title);
+
+
+            if (show.url) {
+              const link = document.createElement("a");
+              link.href = show.url;
+              link.target = "_blank";
+              link.textContent = "Show details";
+              article.appendChild(link);
+            }
+
+            // Image
+            const img = document.createElement("img");
+            if (show.image && show.image.medium) {
+              img.src = show.image.medium;
+            } else {
+              img.src = "https://placehold.co/210x295?text=Not%20Found";
+            }
+            img.alt = show.name;
+            article.appendChild(img);
+
+            const summaryDiv = document.createElement("div");
+            summaryDiv.innerHTML = show.summary || "<p>No summary available.</p>";
+            article.appendChild(summaryDiv);
+
+            resultsDiv.appendChild(article);
+          });
+        })
+        .catch(error => {
+          console.error("Fetch error:", error);
+          resultsDiv.textContent = "Something went wrong. Check console.";
+        });
+    });
+  </script>
+
+</body>
+</html>

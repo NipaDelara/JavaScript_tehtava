@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Task_7</title>
+
+  <link rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+</head>
+<body>
+
+<h2>Routing with Transit</h2>
+
+<form id="routeForm">
+  <label>Enter address:</label>
+  <input type="text" id="address" required>
+  <button type="submit">Find Route</button>
+</form>
+
+<p id="times"></p>
+
+<div id="map" style="height: 500px;"></div>
+
+<script>
+  // Init map
+  const map = L.map("map").setView([60.187, 24.83], 12);
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "OpenStreetMap"
+  }).addTo(map);
+
+  let routeLine = null;
+
+  // School coords
+  const school = { lat: 60.22455, lon: 24.75899 };
+
+  // Get form + elements
+  const routeForm = document.getElementById("routeForm");
+  const addressInput = document.getElementById("address");
+  const timesP = document.getElementById("times");
+
+  // 1) Geocode address
+  function geocodeAddress(address) {
+    const url =
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
+
+    return fetch(url, {
+      headers: {
+        "Accept-Language": "en",
+        "User-Agent": "school-routing-exercise"
+      }
+    })
+      .then(r => r.json())
+      .then(data => {
+        console.log("Geocode result:", data);
+
+        if (!data || data.length === 0) {
+          throw new Error("Address not found");
+        }
+
+        const first = data[0];
+        return {
+          lat: parseFloat(first.lat),
+          lon: parseFloat(first.lon)
+        };
+      });
+  }
+
+  //Get route using OSRM REST API
+  function getRoute(start, end) {
+    const url =
+      `https://router.project-osrm.org/route/v1/driving/${start.lon},${start.lat};${end.lon},${end.lat}?overview=full&geometries=geojson`;
+
+    return fetch(url)
+      .then(r => r.json())
+      .then(data => {
+        console.log("Route result:", data);
+
+        if (data.code !== "Ok" || !data.routes || data.routes.length === 0) {
+          throw new Error("No route from OSRM");
+        }
+
+        return data.routes[0];
+      });
+  }
+
+  //Form submit handler
+  routeForm.addEventListener("submit", event => {
+    event.preventDefault();
+
+    const address = addressInput.value.trim();
+    if (!address) return;
+
+    timesP.textContent = "Searching route...";
+
+    geocodeAddress(address)
+      .then(start => getRoute(start, school))
+      .then(route => {
+        const coords = route.geometry.coordinates.map(c => [c[1], c[0]]);
+
+        // Remove old route
+        if (routeLine) {
+          map.removeLayer(routeLine);
+        }
+
+        // Draw new route
+        routeLine = L.polyline(coords, { color: "blue" }).addTo(map);
+        map.fitBounds(routeLine.getBounds());
+
+        //start/end times
+        const startTime = new Date();
+        const endTime = new Date(startTime.getTime() + route.duration * 1000);
+
+        timesP.textContent =
+          `Trip starts: ${startTime.toLocaleTimeString()} — Ends: ${endTime.toLocaleTimeString()}`;
+      })
+      .catch(err => {
+        console.error("Routing error:", err);
+        timesP.textContent = "Could not find route: " + err.message;
+      });
+  });
+</script>
+
+</body>
+</html>

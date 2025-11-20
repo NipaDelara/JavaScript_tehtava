@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Task_2_TVMaze_Fetch_App</title>
+</head>
+<body>
+
+  <h2>TVMaze Search</h2>
+
+  <form id="searchForm">
+    <label for="query">TV series name:</label>
+    <input id="query" type="text" placeholder="Enter TV series name">
+    <input type="submit" value="Search">
+  </form>
+
+  <p>Result in console.</p>
+
+  <script>
+   const form = document.getElementById("searchForm");
+    const input = document.getElementById("query");
+
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const value = input.value.trim();
+      if (!value) {
+        console.log("Please enter a TV series name.");
+        return;
+      }
+
+      const url = `https://api.tvmaze.com/search/shows?q=${encodeURIComponent(value)}`;
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          console.log("Raw search results:", data);
+
+          console.log("----- Readable Results -----");
+
+          data.forEach((item, index) => {
+            const show = item.show;
+
+            console.log(`#${index + 1}: ${show.name}`);
+            console.log("  Language:", show.language);
+            console.log("  Genres:", show.genres?.join(", "));
+            console.log("  Status:", show.status);
+            console.log("  Premiered:", show.premiered);
+            console.log("----------------------------");
+          });
+        })
+        .catch(error => {
+          console.error("Fetch error:", error);
+        });
+    });
+  </script>
+
+</body>
+</html>

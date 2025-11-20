@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Task_5</title>
+</head>
+<body>
+
+  <h1>Random Chuck Norris Joke</h1>
+
+  <button id="btn">Get Joke</button>
+
+  <script>
+    const btn = document.getElementById("btn");
+
+    btn.addEventListener("click", function () {
+      fetch("https://api.chucknorris.io/jokes/random")
+        .then(response => response.json())
+        .then(data => {
+          console.log("Joke:", data.value);
+        })
+        .catch(error => {
+          console.error("Error:", error);
+        });
+    });
+  </script>
+
+</body>
+</html>
